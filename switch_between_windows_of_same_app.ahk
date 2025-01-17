@@ -23,35 +23,23 @@ states := Map()
     if (filtered_ids.Length = 1) {
         Exit
     }
-    ; this should always be idx = 1
-    idx := GetIndex(filtered_ids, active_id)
-    if (idx != 1) {
+    
+    if (filtered_ids[1] != active_id) {
         Exit
     }
 
     previous_state := states.Get(process_name, [])
     if StateMatchesOrdering(previous_state, filtered_ids) {
-        previous_state.RemoveAt(1)
-        previous_state.Push(active_id)
-        states.Set(process_name, previous_state)
+        new_state := previous_state
     } else {
         ; if it doesn't match, then something has changed and we reset the state
         new_state := filtered_ids.Clone()
-        new_state.RemoveAt(1)
-        new_state.Push(active_id)
-        states.Set(process_name, new_state)
     }
+    new_state.RemoveAt(1)
+    new_state.Push(active_id)
+    states.Set(process_name, new_state)
 
-    WinActivate states.Get(process_name)[1]
-}
-
-GetIndex(arr, val) {
-    for idx, v in arr {
-        if (v = val) {
-            return idx
-        }
-    }
-    return -1
+    WinActivate new_state[1]
 }
 
 ; suppose that previously, the state was     [A, B, C, D, E, F, G]
