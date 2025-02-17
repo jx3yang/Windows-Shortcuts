@@ -84,10 +84,14 @@ GetFilteredIDs(process_name) {
     for id in ids {
         this_class := WinGetClass(id)
         this_title := WinGetTitle(id)
+        this_state := WinGetMinMax(id)
         if (exclude_classes.Has(this_class)) {
             continue
         }
         if (this_title = '') {
+            continue
+        }
+        if (this_state = -1) {
             continue
         }
         filtered_ids.Push(id)
